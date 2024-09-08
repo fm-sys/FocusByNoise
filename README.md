@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/fmsys/FocusByNoise/master/app/src/main/res/mipmap-xhdpi/launcher.png" alt="Launcher Icon"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/app/src/main/res/mipmap-xhdpi/launcher.png" alt="Launcher Icon"/></p>
 
 <h2 align="center"><b>Focus by Noise, a fork of <a href="https://github.com/cliambrown/EasyNoise">Easy Noise</a></b></h2>
 
@@ -10,7 +10,7 @@
 </p>--->
 
 <p align="center">
-<a href="https://github.com/fmsys/FocusByNoise/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/fmsys/FocusByNoise"></a>
+<a href="https://github.com/fm-sys/FocusByNoise/releases" alt="GitHub release"><img src="https://img.shields.io/github/v/release/fm-sys/FocusByNoise"></a>
 <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
 </p>
 
@@ -24,7 +24,7 @@ Originally made by [C. Liam Brown](https://cliambrown.com) and contributors.
 
 ## Screenshots
 
-<a href="https://raw.githubusercontent.com/fmsys/FocusByNoise/master/screenshot_1.png"><img src="https://raw.githubusercontent.com/fmsys/FocusByNoise/master/screenshot_1.png" width="200px" alt="Screenshot 1"></a> <a href="https://raw.githubusercontent.com/fmsys/FocusByNoise/master/screenshot_2.png"><img src="https://raw.githubusercontent.com/fmsys/FocusByNoise/master/screenshot_2.png" width="200px" alt="Screenshot 2"></a>
+<a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png" width="200px" alt="Screenshot 1"></a> <a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png" width="200px" alt="Screenshot 2"></a>
 
 ## How to Add the Quick Settings Tile
 
