@@ -1,28 +1,20 @@
-package com.cliambrown.easynoise
+package com.fmsys.focusbynoise
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
-import android.telephony.TelephonyManager
-import com.cliambrown.easynoise.helpers.*
+import com.fmsys.focusbynoise.helpers.AUDIO_BECOMING_NOISY
+import com.fmsys.focusbynoise.helpers.CONNECTION_STATE_CHANGED
+import com.fmsys.focusbynoise.helpers.HEADPHONES_CONNECTED
+import com.fmsys.focusbynoise.helpers.HEADSET_PLUG
+import com.fmsys.focusbynoise.helpers.HEADSET_STATE_CHANGED
 
 class OutsidePauseReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
         val playerAction = when (intent.action) {
-            PHONE_STATE -> {
-                // Phone call start/stop
-                val state = intent.getStringExtra(TelephonyManager.EXTRA_STATE)
-                val states = arrayOf("IDLE", "RINGING", "OFFHOOK")
-                if (!states.contains(state)) return
-                if (state == "IDLE") {
-                    CALL_ENDED
-                } else {
-                    CALL_STARTED
-                }
-            }
             AudioManager.ACTION_AUDIO_BECOMING_NOISY -> {
                 // Headphones unplugged / disconnected
                 AUDIO_BECOMING_NOISY

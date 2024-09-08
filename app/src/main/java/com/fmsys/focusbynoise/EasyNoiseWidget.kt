@@ -1,4 +1,4 @@
-package com.cliambrown.easynoise
+package com.fmsys.focusbynoise
 
 import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
-import com.cliambrown.easynoise.helpers.*
+import com.fmsys.focusbynoise.helpers.*
 import android.app.PendingIntent
 import android.content.ComponentName
 

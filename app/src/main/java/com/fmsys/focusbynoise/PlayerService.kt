@@ -1,22 +1,36 @@
-package com.cliambrown.easynoise
+package com.fmsys.focusbynoise
 
 import android.app.Activity
 import android.app.Service
-import android.content.Context
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
+import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.SoundPool
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.service.quicksettings.TileService
-import com.cliambrown.easynoise.helpers.*
 import android.widget.Toast
-import kotlin.math.roundToInt
+import com.fmsys.focusbynoise.helpers.AUDIO_BECOMING_NOISY
+import com.fmsys.focusbynoise.helpers.CALL_ENDED
+import com.fmsys.focusbynoise.helpers.CALL_STARTED
+import com.fmsys.focusbynoise.helpers.CONNECTION_STATE_CHANGED
+import com.fmsys.focusbynoise.helpers.DISMISS
+import com.fmsys.focusbynoise.helpers.HEADPHONES_CONNECTED
+import com.fmsys.focusbynoise.helpers.HEADSET_PLUG
+import com.fmsys.focusbynoise.helpers.HEADSET_STATE_CHANGED
+import com.fmsys.focusbynoise.helpers.PAUSE
+import com.fmsys.focusbynoise.helpers.PLAY
+import com.fmsys.focusbynoise.helpers.SET_PAUSED
+import com.fmsys.focusbynoise.helpers.SET_PLAYING
+import com.fmsys.focusbynoise.helpers.TOGGLE_PLAY
+
 
 class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
 
@@ -34,11 +48,26 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
     var wasPlaying: Boolean = false
     var lastAction: String? = null
     var notificationUtils: NotificationUtils? = null
+    var audioAttributes: AudioAttributes? = null
+    lateinit var audioManger: AudioManager
 
     var onPhoneCall = false
     var audioIsNoisy = false
 
     var outsidePauseReceiver: OutsidePauseReceiver? = null
+
+    var audioFocusChangeListener: OnAudioFocusChangeListener =
+        OnAudioFocusChangeListener { focusChange ->
+            if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                play()
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                pause()
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                pause()
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE) {
+                play()
+            }
+        }
 
     companion object {
         fun start(context: Context, action: String): Boolean {
@@ -69,15 +98,19 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
     }
 
     override fun onCreate() {
+        audioManger = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         wasPlaying = getPrefs().getBoolean("wasPlaying", false)
         outsidePauseReceiver = OutsidePauseReceiver()
         val filter = IntentFilter()
-        filter.addAction(PHONE_STATE)
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         filter.addAction(HEADSET_STATE_CHANGED)
         filter.addAction(CONNECTION_STATE_CHANGED)
         filter.addAction(HEADSET_PLUG)
-        registerReceiver(outsidePauseReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(outsidePauseReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(outsidePauseReceiver, filter)
+        }
         createNotification(wasPlaying)
         super.onCreate()
     }
@@ -94,20 +127,21 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
             PAUSE -> pause()
             TOGGLE_PLAY -> togglePlay()
             DISMISS -> dismiss()
-            VOLUME_UP -> updateVolume(+5)
-            VOLUME_DOWN -> updateVolume(-5)
             CALL_STARTED -> {
                 onPhoneCall = true
                 if (isPlaying) pause(false)
             }
+
             CALL_ENDED -> {
                 onPhoneCall = false
                 if (wasPlaying && !audioIsNoisy) play(false)
             }
+
             AUDIO_BECOMING_NOISY -> {
                 audioIsNoisy = true
                 if (isPlaying) pause(false)
             }
+
             HEADPHONES_CONNECTED -> {
                 audioIsNoisy = false
                 if (wasPlaying && !onPhoneCall) play(false)
@@ -152,7 +186,7 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
         if (isLoading) return
         isLoading = true
         if (soundPool == null) {
-            val audioAttributes = AudioAttributes.Builder()
+            audioAttributes = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
@@ -168,7 +202,7 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
     }
 
     fun loadNoise() {
-        val noise = getPrefs().getString("noise", "fuzz")
+        val noise = getPrefs().getString("noise", "pink")
         currentNoise = noise
         val resource: Int = when (noise) {
             resources.getString(R.string.fuzz) -> R.raw.fuzz
@@ -191,17 +225,36 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
         if (streamLoaded) {
             if (lastAction.equals("play")) playLoaded()
         } else {
-            val toast = Toast.makeText(applicationContext,
+            val toast = Toast.makeText(
+                applicationContext,
                 resources.getString(R.string.load_error),
-                Toast.LENGTH_SHORT)
+                Toast.LENGTH_SHORT
+            )
             toast.show()
         }
     }
 
     fun playLoaded() {
-        val floatVol = updateVolume()
-        streamID = soundPool?.play(soundID, floatVol, floatVol, 1, -1, 1.0F)
-        isPlaying = true
+        var ok = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(audioAttributes!!)
+                .setAcceptsDelayedFocusGain(true)
+                .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                .build()
+
+            val result: Int = audioManger.requestAudioFocus(focusRequest)
+            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                ok = true
+            }
+        } else {
+            ok = true
+        }
+
+        if (ok) {
+            streamID = soundPool?.play(soundID, 1f, 1f, 1, -1, 1.0F)
+            isPlaying = true
+        }
     }
 
     fun getIsPlaying(): Boolean {
@@ -265,25 +318,8 @@ class PlayerService : Service(), SoundPool.OnLoadCompleteListener {
         return prefs!!
     }
 
-    fun updateVolume(adjustBy: Int? = null): Float {
-        var volume = getPrefs().getInt("volume", 50).toDouble()
-        val maxVolume = 100.0
-        if (adjustBy != null) {
-            volume += adjustBy
-            if (volume > maxVolume) volume = maxVolume
-            else if (volume < 0.0) volume = 0.0
-            getPrefs().edit().putInt("volume", volume.roundToInt()).apply()
-            mActivity?.updateClient(VOLUME_CHANGED)
-        }
-        val toVolume = volume.div(maxVolume).toFloat()
-        if (streamLoaded) {
-            soundPool!!.setVolume(streamID!!, toVolume, toVolume)
-        }
-        return toVolume
-    }
-
     fun noiseChanged() {
-        val newNoise = getPrefs().getString("noise", "fuzz")
+        val newNoise = getPrefs().getString("noise", "pink")
         if (newNoise.equals(currentNoise)) return
         val tempIsPlaying = isPlaying
         if (tempIsPlaying) pause(false)

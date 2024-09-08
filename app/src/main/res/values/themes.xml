@@ -1,12 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.EasyNoise" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.EasyNoise" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <item name="colorOnPrimary">@color/textColor</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
     </style>
 
     <style name="Theme.EasyNoise.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">

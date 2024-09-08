@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cliambrown.easynoise"
     android:versionCode="10"
     android:versionName="0.10">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:allowBackup="true"
@@ -34,7 +33,6 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="android.intent.action.HEADSET_PLUG" />
                 <action android:name="android.bluetooth.headset.action.STATE_CHANGED" />
@@ -59,16 +57,13 @@
         <service
             android:name=".PlayerService"
             android:enabled="true"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.cliambrown.easynoise.action.PLAY" />
                 <action android:name="com.cliambrown.easynoise.action.PAUSE" />
                 <action android:name="com.cliambrown.easynoise.action.TOGGLE_PLAY" />
                 <action android:name="com.cliambrown.easynoise.action.DISMISS" />
-                <action android:name="com.cliambrown.easynoise.action.VOLUME_UP" />
-                <action android:name="com.cliambrown.easynoise.action.VOLUME_DOWN" />
-                <action android:name="com.cliambrown.easynoise.action.CALL_STARTED" />
-                <action android:name="com.cliambrown.easynoise.action.CALL_ENDED" />
                 <action android:name="com.cliambrown.easynoise.action.AUDIO_BECOMING_NOISY" />
                 <action android:name="com.cliambrown.easynoise.action.HEADPHONES_CONNECTED" />
             </intent-filter>
@@ -83,8 +78,6 @@
                 <action android:name="com.cliambrown.easynoise.action.PAUSE" />
                 <action android:name="com.cliambrown.easynoise.action.TOGGLE_PLAY" />
                 <action android:name="com.cliambrown.easynoise.action.DISMISS" />
-                <action android:name="com.cliambrown.easynoise.action.VOLUME_UP" />
-                <action android:name="com.cliambrown.easynoise.action.VOLUME_DOWN" />
             </intent-filter>
         </receiver>
 

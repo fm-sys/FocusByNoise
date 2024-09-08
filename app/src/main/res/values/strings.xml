@@ -1,14 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
-    <string name="app_name">Easy Noise</string>
-    <string name="channel_name">Easy Noise notification</string>
-    <string name="channel_description">Controller notification for Easy Noise</string>
+    <string name="app_name">FocusByNoise</string>
+    <string name="channel_name">FocusByNoise notification</string>
+    <string name="channel_description">Controller notification for FocusByNoise</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="dismiss">Dismiss</string>
-    <string name="app_widget_description">Easy Noise widget</string>
-    <string name="lower_volume">Lower the volume</string>
-    <string name="increase_volume">Increase the volume</string>
-    <string name="adjust_volume">Adjust volume</string>
+    <string name="app_widget_description">FocusByNoise widget</string>
     <string name="info">Info</string>
     <string name="request_phone_permission">Give Permission</string>
     <string name="needs_phone_permission">In order to automatically pause playback during phone calls, this app needs the \"phone\" permission.</string>

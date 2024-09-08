@@ -1,4 +1,4 @@
-package com.cliambrown.easynoise
+package com.fmsys.focusbynoise
 
 import android.content.ComponentName
 import android.content.Intent
@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
-import com.cliambrown.easynoise.helpers.*
+import com.fmsys.focusbynoise.helpers.*
 
 @RequiresApi(Build.VERSION_CODES.N)
 class QSTileService : TileService() {
@@ -28,7 +28,7 @@ class QSTileService : TileService() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        TileService.requestListeningState(this,
+        requestListeningState(this,
             ComponentName(this, QSTileService::class.java)
         )
         return super.onBind(intent)
