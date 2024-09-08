@@ -24,7 +24,9 @@ Originally made by [C. Liam Brown](https://cliambrown.com) and contributors.
 
 ## Screenshots
 
-<a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png" width="200px" alt="Screenshot 1"></a> <a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png" width="200px" alt="Screenshot 2"></a>
+<a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_1.png" width="200px" alt="Screenshot 1"></a>
+<a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_2.png" width="200px" alt="Screenshot 2"></a>
+<a href="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_3.png"><img src="https://raw.githubusercontent.com/fm-sys/FocusByNoise/master/screenshot_3.png" width="200px" alt="Screenshot 2"></a>
 
 ## How to Add the Quick Settings Tile
 
